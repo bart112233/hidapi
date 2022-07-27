@@ -313,6 +313,19 @@ extern "C" {
 		*/
 		int HID_API_EXPORT HID_API_CALL hid_get_report(hid_device *dev, const unsigned char *data, size_t length);
 
+		/** @brief Set a output report to a HID device.
+			The first byte of @p data[] must contain the Report ID.
+			@ingroup API
+			@param device A device handle returned from hid_open().
+			@param data The data to send, including the report number as
+				the first byte.
+			@param length The length in bytes of the data to send, including
+				the report number.
+			@returns
+				This function returns 0 on success and -1 on error.
+		*/
+		int HID_API_EXPORT HID_API_CALL hid_set_report(hid_device *dev, const unsigned char *data, size_t length);
+
 		/** @brief Get a feature report from a HID device.
 
 			Set the first byte of @p data[] to the Report ID of the

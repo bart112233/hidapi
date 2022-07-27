@@ -110,6 +110,7 @@ extern "C" {
 	typedef BOOLEAN (__stdcall *HidD_SetFeature_)(HANDLE handle, PVOID data, ULONG length);
 	typedef BOOLEAN (__stdcall *HidD_GetFeature_)(HANDLE handle, PVOID data, ULONG length);
 	typedef BOOLEAN (__stdcall *HidD_GetInputReport_)(HANDLE handle, PVOID data, ULONG length);
+	typedef BOOLEAN (__stdcall *HidD_SetOutputReport_)(HANDLE handle, PVOID data, ULONG length);
 	typedef BOOLEAN (__stdcall *HidD_GetIndexedString_)(HANDLE handle, ULONG string_index, PVOID buffer, ULONG buffer_len);
 	typedef BOOLEAN (__stdcall *HidD_GetPreparsedData_)(HANDLE handle, PHIDP_PREPARSED_DATA *preparsed_data);
 	typedef BOOLEAN (__stdcall *HidD_FreePreparsedData_)(PHIDP_PREPARSED_DATA preparsed_data);
@@ -123,6 +124,7 @@ extern "C" {
 	static HidD_SetFeature_ HidD_SetFeature;
 	static HidD_GetFeature_ HidD_GetFeature;
 	static HidD_GetInputReport_ HidD_GetInputReport;
+	static HidD_SetOutputReport_ HidD_SetOutputReport;
 	static HidD_GetIndexedString_ HidD_GetIndexedString;
 	static HidD_GetPreparsedData_ HidD_GetPreparsedData;
 	static HidD_FreePreparsedData_ HidD_FreePreparsedData;
@@ -214,6 +216,7 @@ static int lookup_functions()
 		RESOLVE(HidD_SetFeature);
 		RESOLVE(HidD_GetFeature);
 		RESOLVE(HidD_GetInputReport);
+		RESOLVE(HidD_SetOutputReport);
 		RESOLVE(HidD_GetIndexedString);
 		RESOLVE(HidD_GetPreparsedData);
 		RESOLVE(HidD_FreePreparsedData);
@@ -765,6 +768,17 @@ int HID_API_EXPORT HID_API_CALL hid_get_report(hid_device *dev, const unsigned c
 	BOOL res = HidD_GetInputReport(dev->device_handle, (PVOID)data, length);
 	if (!res) {
 		register_error(dev, "HidD_GetInputReport");
+		return -1;
+	}
+
+	return length;
+}
+
+int HID_API_EXPORT HID_API_CALL hid_set_report(hid_device *dev, const unsigned char *data, size_t length) {
+
+	BOOL res = HidD_SetOutputReport(dev->device_handle, (PVOID)data, length);
+	if (!res) {
+		register_error(dev, "HidD_SetOutputReport");
 		return -1;
 	}
 
